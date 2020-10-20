@@ -252,7 +252,7 @@ DEPENDENCIES
   font-awesome-rails
   jquery-rails
   launchy
-  pg (~> 0.20.0)
+  pg (~> 0.11)
   rails (~> 4.2.6)
   rails_12factor
   rails_admin
