@@ -114,8 +114,7 @@ RSpec.describe Game, type: :model do
   end
 
   context '.answer_current_question!' do
-    let(:q) { game_w_questions.current_game_question }
-    subject(:answer) { game_w_questions.answer_current_question!(q.correct_answer_key) }
+    subject(:current_question) { game_w_questions.current_game_question }
 
     it 'correct answer' do
       expect(answer).to be_truthy
@@ -134,6 +133,7 @@ RSpec.describe Game, type: :model do
       expect(answer).to be_truthy
       expect(game_w_questions.status).to eq(:won)
       expect(game_w_questions.finished?).to be_truthy
+      expect(game_w_questions.prize).to eq(Game::PRIZES.max)
     end
 
     it 'game finished due to timeout' do
