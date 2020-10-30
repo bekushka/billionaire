@@ -111,37 +111,47 @@ RSpec.describe Game, type: :model do
     it 'correct .current_game_question' do
       expect(game_w_questions.current_game_question).to eq(game_w_questions.game_questions.first)
     end
-  end
 
-  context '.answer_current_question!' do
+
+  context 'correct answer_current_question' do
     subject(:current_question) { game_w_questions.current_game_question }
 
-    it 'correct answer' do
-      expect(answer).to be_truthy
+    it 'right answer' do
+      expect(game_w_questions.answer_current_question!(current_question.correct_answer_key)).to be true
       expect(game_w_questions.status).to eq(:in_progress)
-      expect(game_w_questions.finished?).to be_falsey
+      expect(game_w_questions.current_level).to eq(1)
+      expect(game_w_questions.is_failed).to be false
+
+      game_w_questions.take_money!
+      expect(game_w_questions.prize).to eq(Game::PRIZES.first)
     end
 
     it 'wrong answer' do
-      expect(game_w_questions.answer_current_question!('c')).to be_falsey
+      expect(game_w_questions.answer_current_question!('a')).to be false
       expect(game_w_questions.status).to eq(:fail)
-      expect(game_w_questions.finished?).to be_truthy
+      expect(game_w_questions.current_level).to eq(0)
+      expect(game_w_questions.is_failed).to be true
+      expect(game_w_questions.finished?).to be true
     end
 
-    it 'last correct answer' do
-      game_w_questions.current_level = 14
-      expect(answer).to be_truthy
+    it 'last answer' do
+      game_w_questions.current_level = Question::QUESTION_LEVELS.max
+
+      expect(game_w_questions.answer_current_question!(current_question.correct_answer_key)).to be true
       expect(game_w_questions.status).to eq(:won)
-      expect(game_w_questions.finished?).to be_truthy
+      expect(game_w_questions.finished?).to be true
+      expect(game_w_questions.is_failed).to be false
       expect(game_w_questions.prize).to eq(Game::PRIZES.max)
     end
 
-    it 'game finished due to timeout' do
-      game_w_questions.created_at = 1.hour.ago
-      game_w_questions.finished_at = Time.now
-      expect(answer).to be_falsey
+    it 'answer timeout' do
+      game_w_questions.created_at = Game::TIME_LIMIT.ago
+
+      expect(game_w_questions.answer_current_question!(current_question.correct_answer_key)).to be false
+      expect(game_w_questions.finished?).to be true
       expect(game_w_questions.status).to eq(:timeout)
-      expect(game_w_questions.finished?).to be_truthy
+      expect(game_w_questions.is_failed).to be true
     end
   end
+end
 
