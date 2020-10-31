@@ -121,9 +121,6 @@ RSpec.describe Game, type: :model do
       expect(game_w_questions.status).to eq(:in_progress)
       expect(game_w_questions.current_level).to eq(1)
       expect(game_w_questions.is_failed).to be false
-
-      game_w_questions.take_money!
-      expect(game_w_questions.prize).to eq(Game::PRIZES.first)
     end
 
     it 'wrong answer' do
@@ -137,7 +134,7 @@ RSpec.describe Game, type: :model do
     it 'last answer' do
       game_w_questions.current_level = Question::QUESTION_LEVELS.max
 
-      expect(game_w_questions.answer_current_question!(current_question.correct_answer_key)).to be true
+      expect(game_w_questions.answer_current_question!('b')).to be true
       expect(game_w_questions.status).to eq(:won)
       expect(game_w_questions.finished?).to be true
       expect(game_w_questions.is_failed).to be false
@@ -147,7 +144,7 @@ RSpec.describe Game, type: :model do
     it 'answer timeout' do
       game_w_questions.created_at = Game::TIME_LIMIT.ago
 
-      expect(game_w_questions.answer_current_question!(current_question.correct_answer_key)).to be false
+      expect(game_w_questions.answer_current_question!('b')).to be false
       expect(game_w_questions.finished?).to be true
       expect(game_w_questions.status).to eq(:timeout)
       expect(game_w_questions.is_failed).to be true
