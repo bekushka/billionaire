@@ -117,7 +117,7 @@ RSpec.describe Game, type: :model do
     subject(:current_question) { game_w_questions.current_game_question }
 
     it 'right answer' do
-      expect(game_w_questions.answer_current_question!(current_question.correct_answer_key)).to be true
+      expect(game_w_questions.answer_current_question!('b')).to be true
       expect(game_w_questions.status).to eq(:in_progress)
       expect(game_w_questions.current_level).to eq(1)
       expect(game_w_questions.is_failed).to be false
