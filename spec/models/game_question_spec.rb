@@ -125,7 +125,7 @@ RSpec.describe GameQuestion, type: :model do
       game_question.add_friend_call
 
       expect(game_question.help_hash).to include(:friend_call)
-      expect(game_question.help_hash[:friend_call]).to match
+      expect(game_question.help_hash[:friend_call]).to match("считает, что это вариант")
     end
   end
 end
