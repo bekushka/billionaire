@@ -4,7 +4,7 @@ RSpec.describe 'users/show', type: :view do
   let(:user) { create(:user, name: 'Beka') }
   let(:another_user) { create(:user, name: 'Bekushka') }
 
-  context 'user see his own page'
+  context 'user see his own page' do
     before(:each) do
       assign(:user, user)
       sign_in user
@@ -24,8 +24,9 @@ RSpec.describe 'users/show', type: :view do
     it 'renders game fragments' do
       expect(rendered).to match('в процессе')
     end
+  end
 
-  context 'first user look at second user'
+  context 'first user look at second user' do
     before(:each) do
       assign(:user, another_user)
       assign(:games, [build_stubbed(:game)])
@@ -44,4 +45,5 @@ RSpec.describe 'users/show', type: :view do
     it 'renders change password' do
       expect(rendered).not_to match('Сменить имя и пароль')
     end
+  end
 end
